@@ -1,0 +1,3 @@
+#!/sbin/ash
+
+./TEST $NCPUS
