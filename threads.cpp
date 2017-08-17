@@ -45,38 +45,43 @@ int main(int argc, char * argv[])
 		// cout << "Thread" << omp_get_thread_num() << endl << flush;
 		// For each thread / core, access one element of the structure
 		
-		j = 52;		// element number in the range 0 - L2BANKMUL
-		// cout << "Element number: " << j << endl << flush;
+		// element number in the range 0 - L2BANKMUL
+		j = 0;
+		while (j < L2BANKMUL) 
+		{
+			// cout << "Element number: " << j << endl << flush;
 		
-		// Integer Ops
-		for(k = 0; k < L1MUL - 3; k++)
-		{
-			while (iter[i] < 3)
+			// Integer Ops
+			for(k = 0; k < L1MUL - 3; k++)
 			{
-				p_str[i][j].var1[k] = p_str[i][j].var1[k] + 15;
-				p_str[i][j].var1[k+1] = p_str[i][j].var1[k+1] * 25;
-				p_str[i][j].var1[k+2] = p_str[i][j].var1[k+2] / 23;
-				iter[i] += 1;
+				while (iter[i] < NUM_CPU_OPS)
+				{
+					p_str[i][j].var1[k] = p_str[i][j].var1[k] + 15;
+					p_str[i][j].var1[k+1] = p_str[i][j].var1[k+1] * 25;
+					p_str[i][j].var1[k+2] = p_str[i][j].var1[k+2] / 23;
+					iter[i] += 1;
+				}
+				iter[i] = 0;
+				//cout << endl << flush;
 			}
 			iter[i] = 0;
-			//cout << endl << flush;
-		}
-		iter[i] = 0;
 
-		// Floating point Ops
-		for(k = 0; k < L1MUL - 3; k++)
-		{
-			while (iter[i] < 3)
+			// Floating point Ops
+			for(k = 0; k < L1MUL - 3; k++)
 			{
-				p_str[i][j].var2[k] = p_str[i][j].var2[k] + 15.5567;
-				p_str[i][j].var2[k+1] = p_str[i][j].var2[k+1] * 25.3346;
-				p_str[i][j].var2[k+2] = p_str[i][j].var2[k+2] / 27.5678;
-				iter[i] += 1;
+				while (iter[i] < NUM_CPU_OPS)
+				{
+					p_str[i][j].var2[k] = p_str[i][j].var2[k] + 15.5567;
+					p_str[i][j].var2[k+1] = p_str[i][j].var2[k+1] * 25.3346;
+					p_str[i][j].var2[k+2] = p_str[i][j].var2[k+2] / 27.5678;
+					iter[i] += 1;
+				}
+				iter[i] = 0;
+				//cout << endl << flush;
 			}
-			iter[i] = 0;
-			//cout << endl << flush;
+			iter[i] = 0; 	
+			j = j + MEM_FETCH_INTERVAL;	
 		}
-		iter[i] = 0; 		
 	}
 	qsim_magic_disable();
 

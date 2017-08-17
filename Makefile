@@ -11,4 +11,4 @@ all: $(TESTS)
 	tar -cf $@.tar $@ runme.sh
 
 clean:
-	rm -f $(TESTS) runme.sh *.tar
+	rm -f $(TESTS) runme.sh *.tar trial*

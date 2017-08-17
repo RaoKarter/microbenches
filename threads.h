@@ -11,8 +11,10 @@
 #include <omp.h>
 
 #define NUM_ITER1 5
-#define L2BANKMUL 128
+#define L2BANKMUL 256
 #define L1MUL 1365
+#define NUM_CPU_OPS 10
+#define MEM_FETCH_INTERVAL ( (L2BANKMUL/4) - 1 )
 
 struct s_var {
 int var1[L1MUL + 1];			// 5464B
