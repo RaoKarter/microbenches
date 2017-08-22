@@ -17,5 +17,7 @@ runme.sh
 
 ./threads $NPUS
 
-
+pure_memory.cpp: This is to test memory fetches on all 16 cores
+pure_memory_single_core.cpp: This is to test memory fetches on a single core.
+single_core_mips_mem.cpp: This is to test MIPS and mem fetches on a single core.
 
