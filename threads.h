@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 #include <omp.h>
+#include <pthread.h>
 
 #define NUM_ITER1 5
 #define L2BANKMUL 256
@@ -18,8 +19,9 @@
 #define VAR_SIZE (L1MUL*16)
 
 #define PAGE_SIZE 4096				// 4KB
-#define NUM_MEM_FETCHES 10			// Parameter to keep num of mem ops fixed
+#define NUM_MEM_FETCHES 100			// Parameter to keep num of mem ops fixed
 #define NUM_CPU_OPS 1				// Parameter to increase MIPS
+#define NUM_CPU_OPS1 10				// Parameter to increase MIPS
 
 #define DOUBLE_ELE_SIZE 8			// 8B
 #define DB_2_MB 262144				// length of a double sized array. sizeof(double_arr1[262144]) = 2MB
@@ -29,7 +31,31 @@
 #define NUM_ELE_IN_PAGE (PAGE_SIZE/STR_ELE_SIZE)	// Number of elements of particular type in a 4KB page
 													// For a double sized array NUM_ELE_IN_PAGE = 512
 													// For a struct s_16B sized array NUM_ELE_IN_PAGE = 256
-#define L2BANKID 5					// 5 => L2BANK#2	0 => L2BANK#13
+
+/*
+Core mapping
+0  ->  2
+1  ->  3
+2  ->  4
+...
+12 ->  14
+13 ->  15
+14 ->  0
+15 ->  1
+*/ 
+#define CORE_NUMBER 14
+#define CORE_NUMBER1 13
+/*
+L2 Bank mapping
+0  ->  13
+1  ->  14
+2  ->  15
+3  ->  0
+...
+15 ->  12
+*/
+#define L2BANKID 2
+#define L2BANKID1 13
 
 struct s_var {
 int var1[VAR_SIZE + 1];				// 5464B should be brought into L1
@@ -42,5 +68,20 @@ int int_var1, int_var2;
 double double_var3;
 };
 
+class auto_qsim_magic {
+public:
+auto_qsim_magic()
+{
+	qsim_magic_enable();
+}
+~auto_qsim_magic()
+{
+	qsim_magic_disable();
+}
+};
+
+
+#define OPTMEM7
+#define OPTMEM17
 #endif /* __THREADS_H__ */
 
